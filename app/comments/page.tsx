@@ -1,5 +1,5 @@
 "use client";
-
+import './comment.css'
 import { useState, useEffect, useRef, FormEventHandler } from 'react';
 import { format } from 'date-fns';
 import { Header } from '../../components/Header';
@@ -10,7 +10,7 @@ interface Comment {
     fields: {
         content: string;
         movie_name: string;
-        status: 'published' | 'pending-for-moderation'
+        status: 'Published' | 'Pending-for-moderation'
     }
 }
 
@@ -47,7 +47,7 @@ function Comments() {
         const commentContent = commentRef.current?.value || '';
         if (commentContent) {
             // console.log('handleSubmit', commentRef.current?.value);
-            fetch('/comments/api', {
+            fetch('comments/api', {
                 method: 'POST',
                 body: JSON.stringify({ commentContent: commentContent }),
             })
@@ -61,25 +61,36 @@ function Comments() {
 
     return (
         <main className="mt-6">
-            <Header>Comments</Header>
+            <h1 className='header'>Comment</h1>
             {/* {isError && <p>Error!</p>} */}
             {isError ? <p>Error!</p> : null}
             {isLoading && <p>Loading...</p>}
-            <div>
+            <div className='comment-list'>
                 {comments && comments.map((elem) => {
                     return (
-                        <div key={elem.id}>{elem.fields.content} ({elem.fields.status}, {formatDate(elem.createdTime)})</div>
+                        <div key={elem.id} className='comment'>
+                            <p className='comment-at'>
+                                {formatDate(elem.createdTime)}
+                            </p>
+                            <p className='comment-content'>
+                                {elem.fields.content}
+                            </p>
+                            <p className='comment-status'>
+                                {elem.fields.status}
+                            </p>  
+                        </div>
                     )
                 })}
             </div>
-            <div>
+            <div className='write-comment'>
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="comment_body"></label>
-                        <textarea id="comment_body" ref={commentRef} style={{ color: 'black '}} />
+                        <textarea id="comment_body" rows={10} cols={120} placeholder='Enter your comment' ref={commentRef} style={{ color: 'black '}}  />
                     </div>
                     <div>
-                        <input type="submit" value="Send" />
+                        {/* <input type="submit" value="Send" /> */}
+                        <button onClick={handleSubmit}>Send</button>
                     </div>
                 </form>
             </div>

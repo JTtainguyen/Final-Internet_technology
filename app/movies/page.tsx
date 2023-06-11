@@ -1,5 +1,7 @@
 "use client";
 
+import './movie.css'
+
 import { useState, useEffect } from 'react';
 import { Header } from '../../components/Header';
 
@@ -18,6 +20,7 @@ interface Movie {
     fields: {
         title: string;
         category_name: string;
+        image_link: string;
     }
 }
 
@@ -42,14 +45,21 @@ function Movies() {
 
     return (
         <main className="mt-6">
-            <Header>Movies</Header>
-            {/* {isError && <p>Error!</p>} */}
+            <h1 className="header">Movies</h1>
             {isError ? <p>Error!</p> : null}
             {isLoading && <p>Loading...</p>}
-            <div>
+            <div className='movie-list'>
                 {movies && movies.map((elem) => {
                     return (
-                        <div key={elem.id}>{elem.fields.title} ({elem.fields.category_name})</div>
+                        <div key={elem.id} className='movie'>
+                            <h2 className='movie-title'>
+                                {elem.fields.title} 
+                            </h2>
+                            <p className='movie-type'>
+                              {elem.fields.category_name}
+                            </p>
+                            <img src={elem.fields.image_link} alt=''/> 
+                        </div>
                     )
                 })}
             </div>
